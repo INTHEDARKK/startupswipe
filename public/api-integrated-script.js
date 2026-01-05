@@ -88,7 +88,10 @@ setTheme("home");
 const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
 function ytUrl(id){
-  return `https://www.youtube-nocookie.com/embed/${id}?controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1`;
+  if (!id) return "";
+  // Clean the ID (remove any URL parts if user pasted full URL)
+  const cleanId = id.replace(/^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/, '$1');
+  return `https://www.youtube-nocookie.com/embed/${cleanId}?controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
 }
 
 function tickerFromName(name){
@@ -427,19 +430,43 @@ function renderTrending(){
 
 /* ---------- CARD RENDER ---------- */
 function render(){
-  if (startups.length === 0) return;
+  if (startups.length === 0) {
+    // Show placeholder if no startups
+    if (nameEl) nameEl.textContent = "No startups yet";
+    if (descEl) descEl.textContent = "Be the first to submit a startup!";
+    if (video) video.src = "";
+    return;
+  }
+  
   const s = startups[index];
+  if (!s) return;
 
-  pillTag.textContent = s.pill;
-  nameEl.textContent = s.name;
-  tagEl.textContent = s.tag;
-  descEl.textContent = s.desc;
-  captionEl.textContent = s.caption || s.desc;
+  if (pillTag) pillTag.textContent = s.pill || "Startup";
+  if (nameEl) nameEl.textContent = s.name || "Startup Name";
+  if (tagEl) tagEl.textContent = s.tag || "General";
+  if (descEl) descEl.textContent = s.desc || "No description";
+  if (captionEl) captionEl.textContent = s.caption || s.desc || "Startup demo";
 
-  video.src = "";
-  video.src = ytUrl(s.yt);
+  // Clear and set video source
+  if (video && s.yt) {
+    video.src = "";
+    const newSrc = ytUrl(s.yt);
+    if (newSrc) {
+      // Use setTimeout to ensure iframe reloads properly
+      setTimeout(() => {
+        if (video) {
+          video.src = newSrc;
+          // Force reload by removing and re-adding src
+          video.removeAttribute('src');
+          video.setAttribute('src', newSrc);
+        }
+      }, 100);
+    }
+  } else if (video) {
+    video.src = "";
+  }
 
-  animateConfidence(s.confidence);
+  animateConfidence(s.confidence || 50);
   document.querySelectorAll(".vote").forEach(b => b.classList.remove("active"));
 
   renderTrending();

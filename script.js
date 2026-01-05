@@ -4,6 +4,9 @@
    ========================= */
 
 /* ---------- THEME + ROUTING ---------- */
+"use client";
+
+
 const themes = {
   home:    { bg:"#F6F6F6", tint:"rgba(255,203,116,.25)", darkwash:"rgba(17,17,17,.06)" },
   about:   { bg:"#F1F1F1", tint:"rgba(255,203,116,.18)", darkwash:"rgba(17,17,17,.10)" },

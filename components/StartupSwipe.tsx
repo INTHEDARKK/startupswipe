@@ -88,10 +88,10 @@ export default function StartupSwipe() {
                         id="video"
                         src=""
                         title="Startup demo"
-                        allow="autoplay; encrypted-media; picture-in-picture"
+                        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                         referrerPolicy="strict-origin-when-cross-origin"
-                        sandbox="allow-scripts allow-same-origin allow-presentation"
                         allowFullScreen
+                        frameBorder="0"
                       ></iframe>
                       <div className="drag-overlay" id="dragOverlay" aria-hidden="true"></div>
                     </div>
