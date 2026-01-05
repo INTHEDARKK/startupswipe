@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StartupSwipe</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="leftside">
+      <button class="brand" type="button" data-route="home" aria-label="StartupSwipe Home">
+        <span class="brand-dot"></span>
+        <span class="brand-name">StartupSwipe</span>
+      </button>
+
+      <nav class="navlinks" aria-label="Site navigation">
+        <button class="navlink active" data-route="home" type="button">Home</button>
+        <button class="navlink" data-route="about" type="button">About</button>
+        <button class="navlink" data-route="explore" type="button">Explore</button>
+      </nav>
+    </div>
+
+    <div class="rightside">
+      <button class="btn-top primary" id="beSeedBtn" type="button">Be a Seed</button>
+
+      <!-- User dashboard icon beside Be a Seed -->
+      <div class="user-menu" id="userMenu">
+        <button class="user-trigger" id="userTrigger" type="button" aria-label="User menu">
+          <span class="avatar" id="avatarLetter">?</span>
+        </button>
+
+        <div class="user-dropdown" id="userDropdown" aria-label="User dashboard">
+          <div class="user-info">
+            <div class="user-name" id="username">Guest</div>
+            <div class="user-sub" id="userSub">Sign in to submit</div>
+          </div>
+
+          <button class="menu-item" data-route="profile" type="button">Profile</button>
+          <button class="menu-item" data-route="profile" type="button">My Startups</button>
+
+          <div class="menu-divider"></div>
+
+          <button class="menu-item danger" id="logoutBtn" type="button">Log out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="app">
+  <div class="viewport">
+    <div class="viewstack" id="viewstack">
+
+      <!-- HOME -->
+      <section class="view is-active" data-view="home" aria-label="Home">
+        <div class="layout">
+          <article class="card" id="card" aria-label="Startup card">
+            <button class="skip" id="skipBtn" type="button">Skip</button>
+
+            <section class="media">
+              <div class="pill" id="pillTag">Consumer</div>
+
+              <div class="video-wrap" id="videoWrap">
+  <iframe
+    id="video"
+    src=""
+    title="Startup demo"
+    allow="autoplay; encrypted-media; picture-in-picture"
+    referrerpolicy="strict-origin-when-cross-origin"
+    sandbox="allow-scripts allow-same-origin allow-presentation"
+    allowfullscreen></iframe>
+
+  <!-- NEW: drag layer so iframe doesn't steal swipes -->
+  <div class="drag-overlay" id="dragOverlay" aria-hidden="true"></div>
+</div>
+
+
+              <div class="video-caption">
+                <span class="caption-dot"></span>
+                <span class="caption-text" id="videoCaption">Short demo caption…</span>
+              </div>
+            </section>
+
+            <section class="content">
+              <div class="header">
+                <div class="left">
+                  <h1 id="name">Startup Name</h1>
+
+                  <div class="subrow">
+                    <span class="tag" id="tag">Consumer</span>
+                    <button class="readmore" id="readMoreBtn" type="button">Read more</button>
+                  </div>
+
+                  <p class="desc" id="desc">Short one-line description.</p>
+                </div>
+
+                <div class="confidence">
+                  <div class="ring">
+                    <svg viewBox="0 0 44 44" class="ring-svg" aria-hidden="true">
+                      <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+                      <circle class="ring-fg" cx="22" cy="22" r="18"></circle>
+                    </svg>
+                    <div class="ring-center">
+                      <span class="pct" id="confidence">66</span><span class="pct-sign">%</span>
+                    </div>
+                  </div>
+                  <small>Confidence</small>
+                </div>
+              </div>
+
+              <p class="question">Will they get funded?</p>
+
+              <div class="votes">
+                <button class="vote yes" data-vote="yes" type="button">Yes</button>
+                <button class="vote maybe" data-vote="maybe" type="button">Maybe</button>
+                <button class="vote no" data-vote="no" type="button">No</button>
+              </div>
+
+              <button class="feedback-btn" id="feedbackBtn" type="button">Give Feedback</button>
+            </section>
+          </article>
+
+          <aside class="trending" aria-label="Trending startups">
+            <div class="trend-head">
+              <div>
+                <div class="trend-title">Trending</div>
+                <div class="trend-sub">Live by confidence</div>
+              </div>
+              <div class="pulse" title="Live"></div>
+            </div>
+
+            <div class="trend-list" id="trendList"></div>
+
+            <div class="trend-foot">
+              <span class="trend-hint">▲ up &nbsp; ▼ down &nbsp; ▬ flat</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="view" data-view="about" aria-label="About">
+        <div class="page">
+          <div class="page-card">
+            <div class="page-head">
+              <h2>About</h2>
+              <p class="page-sub">A clean playground for founders and builders.</p>
+            </div>
+
+            <div class="page-body">
+              <p>
+                <strong>StartupSwipe</strong> is a minimalist community game where people watch startup demos,
+                vote on funding potential, and leave feedback to help founders iterate faster.
+              </p>
+              <p>
+                It’s not a forum, not a feed, and not a loud timeline. It’s a focused arena for judgment,
+                learning, and iteration.
+              </p>
+
+              <div class="contact-box">
+                <div class="contact-label">Contact</div>
+                <div class="contact-email">seed@startupswipe.example</div>
+                <div class="contact-hint">Replace with your real email when you launch.</div>
+              </div>
+            </div>
+
+            <div class="page-actions">
+              <button class="btn-top ghost" data-route="home" type="button">Back to Home</button>
+              <button class="btn-top primary" data-route="explore" type="button">Explore</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPLORE -->
+      <section class="view" data-view="explore" aria-label="Explore">
+        <div class="page">
+          <div class="page-card">
+            <div class="page-head">
+              <h2>Explore</h2>
+              <p class="page-sub">Discover categories, patterns, and what’s trending.</p>
+            </div>
+
+            <div class="page-body">
+              <div class="chips">
+                <span class="chip">AI</span>
+                <span class="chip">DevTools</span>
+                <span class="chip">Consumer</span>
+                <span class="chip">FinTech</span>
+                <span class="chip">Health</span>
+                <span class="chip">B2B</span>
+              </div>
+
+              <div class="explore-grid">
+                <div class="mini-card">
+                  <div class="mini-title">How it works</div>
+                  <div class="mini-text">Watch a demo, vote, and leave feedback. Your votes influence trending.</div>
+                </div>
+                <div class="mini-card">
+                  <div class="mini-title">What to look for</div>
+                  <div class="mini-text">Clarity, speed, proof, market angle, and whether the demo is real.</div>
+                </div>
+                <div class="mini-card">
+                  <div class="mini-title">Founder mode</div>
+                  <div class="mini-text">Click “Be a Seed” to submit your demo video and links.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="page-actions">
+              <button class="btn-top ghost" data-route="about" type="button">About</button>
+              <button class="btn-top primary" data-route="home" type="button">Go to Home</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE -->
+      <section class="view" data-view="profile" aria-label="Profile">
+        <div class="page">
+          <div class="page-card">
+            <div class="page-head">
+              <h2>Profile</h2>
+              <p class="page-sub">Your seeds, your stats.</p>
+            </div>
+
+            <div class="profile-header">
+              <div class="profile-avatar" id="profileAvatar">?</div>
+              <div>
+                <div class="profile-name" id="profileName">Guest</div>
+                <div class="profile-meta" id="profileMeta">Sign in to track submissions</div>
+              </div>
+            </div>
+
+            <div class="profile-stats">
+              <div class="stat">
+                <div class="stat-num" id="statCount">0</div>
+                <div class="stat-label">Submissions</div>
+              </div>
+              <div class="stat">
+                <div class="stat-num" id="statAvg">--</div>
+                <div class="stat-label">Avg confidence</div>
+              </div>
+              <div class="stat">
+                <div class="stat-num" id="statLatest">--</div>
+                <div class="stat-label">Latest</div>
+              </div>
+            </div>
+
+            <div class="profile-list" id="profileList"></div>
+
+            <div class="page-actions">
+              <button class="btn-top ghost" data-route="home" type="button">Back</button>
+              <button class="btn-top primary" id="profileSeedBtn" type="button">Be a Seed</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- READ MORE -->
+<div class="modal-overlay" id="infoModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Startup info">
+    <div class="modal-head">
+      <h2 id="infoTitle">About</h2>
+      <button class="xbtn" id="closeInfo" type="button" aria-label="Close">✕</button>
+    </div>
+    <p class="modal-text" id="infoText">Longer description…</p>
+    <div class="links">
+      <a class="link" id="siteLink" href="#" target="_blank" rel="noreferrer">Website</a>
+      <a class="link" id="socialLink" href="#" target="_blank" rel="noreferrer">Social</a>
+    </div>
+  </div>
+</div>
+
+<!-- FEEDBACK -->
+<div class="modal-overlay" id="feedbackModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Feedback">
+    <div class="modal-head">
+      <h2>Feedback</h2>
+      <button class="xbtn" id="closeFeedback" type="button" aria-label="Close">✕</button>
+    </div>
+
+    <textarea placeholder="What’s strong?"></textarea>
+    <textarea placeholder="What’s missing?"></textarea>
+    <textarea placeholder="Similar ideas?"></textarea>
+
+    <div class="modal-actions">
+      <button class="cancel" id="cancelFeedback" type="button">Cancel</button>
+      <button class="submit" type="button">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div class="modal-overlay" id="authModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Authentication">
+    <div class="modal-head">
+      <h2 id="authTitle">Log in</h2>
+      <button class="xbtn" id="closeAuth" type="button" aria-label="Close">✕</button>
+    </div>
+
+    <div class="auth-tabs" role="tablist" aria-label="Auth mode">
+      <button class="auth-tab active" id="tabLogin" type="button" role="tab" aria-selected="true">Log in</button>
+      <button class="auth-tab" id="tabRegister" type="button" role="tab" aria-selected="false">Register</button>
+    </div>
+
+    <label class="field">
+      <span>Username</span>
+      <input id="authName" type="text" placeholder="e.g., rahul" />
+    </label>
+
+    <div id="registerExtra" hidden>
+      <label class="field">
+        <span>Email</span>
+        <input id="authEmail" type="email" placeholder="you@example.com" />
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Password</span>
+      <input id="authPass" type="password" placeholder="demo only" />
+    </label>
+
+    <div class="modal-actions">
+      <button class="cancel" id="cancelAuth" type="button">Cancel</button>
+      <button class="submit" id="doAuth" type="button">Continue</button>
+    </div>
+
+    <p class="modal-text subtle" id="authHint">Demo UI only. Backend later.</p>
+  </div>
+</div>
+
+<!-- UPLOAD -->
+<div class="modal-overlay" id="uploadModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Upload startup">
+    <div class="modal-head">
+      <h2>Upload your startup</h2>
+      <button class="xbtn" id="closeUpload" type="button" aria-label="Close">✕</button>
+    </div>
+
+    <p class="modal-text subtle">Frontend demo: stored in memory for now.</p>
+
+    <label class="field">
+      <span>Startup name</span>
+      <input id="upName" type="text" placeholder="Your startup name" />
+    </label>
+
+    <label class="field">
+      <span>Short description</span>
+      <input id="upDesc" type="text" placeholder="One line. Keep it tight." />
+    </label>
+
+    <label class="field">
+      <span>YouTube video ID</span>
+      <input id="upYt" type="text" placeholder="e.g., M7lc1UVf-VE" />
+    </label>
+
+    <label class="field">
+      <span>Website</span>
+      <input id="upSite" type="url" placeholder="https://..." />
+    </label>
+
+    <label class="field">
+      <span>Social</span>
+      <input id="upSocial" type="url" placeholder="https://..." />
+    </label>
+
+    <div class="modal-actions">
+      <button class="cancel" id="cancelUpload" type="button">Cancel</button>
+      <button class="submit" id="submitUpload" type="button">Save (demo)</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
