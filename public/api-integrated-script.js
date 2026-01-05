@@ -91,7 +91,7 @@ function ytUrl(id){
   if (!id) return "";
   // Clean the ID (remove any URL parts if user pasted full URL)
   const cleanId = id.replace(/^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/, '$1');
-  return `https://www.youtube-nocookie.com/embed/${cleanId}?controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
+  return `https://www.youtube-nocookie.com/embed/${cleanId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1&origin=${window.location.origin}&loop=0`;
 }
 
 function tickerFromName(name){
@@ -447,20 +447,26 @@ function render(){
   if (descEl) descEl.textContent = s.desc || "No description";
   if (captionEl) captionEl.textContent = s.caption || s.desc || "Startup demo";
 
-  // Clear and set video source
+  // Clear and set video source with autoplay
   if (video && s.yt) {
-    video.src = "";
     const newSrc = ytUrl(s.yt);
     if (newSrc) {
-      // Use setTimeout to ensure iframe reloads properly
+      // Clear first
+      video.src = "";
+      // Force iframe reload for autoplay to work
       setTimeout(() => {
         if (video) {
-          video.src = newSrc;
-          // Force reload by removing and re-adding src
+          // Remove and recreate src to force reload
           video.removeAttribute('src');
-          video.setAttribute('src', newSrc);
+          video.src = newSrc;
+          // Try to trigger play programmatically (may not work due to browser policies)
+          try {
+            video.contentWindow?.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+          } catch (e) {
+            // Ignore cross-origin errors
+          }
         }
-      }, 100);
+      }, 150);
     }
   } else if (video) {
     video.src = "";
