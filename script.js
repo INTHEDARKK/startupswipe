@@ -11,6 +11,50 @@ const themes = {
   profile: { bg:"#EFEFEF", tint:"rgba(255,203,116,.16)", darkwash:"rgba(17,17,17,.12)" }
 };
 
+
+function extractYouTubeId(input) {
+  const s = String(input || "").trim();
+
+  // If user already pasted an ID (11 chars)
+  if (/^[a-zA-Z0-9_-]{11}$/.test(s)) return s;
+
+  // Try parsing as a URL
+  try {
+    const url = new URL(s);
+
+    // youtu.be/<id>
+    if (url.hostname.includes("youtu.be")) {
+      const id = url.pathname.split("/").filter(Boolean)[0];
+      return /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : null;
+    }
+
+    // youtube.com/watch?v=<id>
+    if (url.hostname.includes("youtube.com")) {
+      const v = url.searchParams.get("v");
+      if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
+
+      // youtube.com/embed/<id>
+      const parts = url.pathname.split("/").filter(Boolean);
+      const embedIndex = parts.indexOf("embed");
+      if (embedIndex !== -1 && parts[embedIndex + 1]) {
+        const id = parts[embedIndex + 1];
+        return /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : null;
+      }
+    }
+  } catch (e) {
+    // Not a valid URL, ignore
+  }
+
+  // Fallback regex (handles odd pastes)
+  const m =
+    s.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/) ||
+    s.match(/[?&]v=([a-zA-Z0-9_-]{11})/) ||
+    s.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
+
+  return m ? m[1] : null;
+}
+
+
 const views = Array.from(document.querySelectorAll(".view"));
 const navLinks = Array.from(document.querySelectorAll(".navlink"));
 const routeButtons = Array.from(document.querySelectorAll("[data-route]"));
@@ -380,14 +424,20 @@ closeUpload?.addEventListener("click", closeUploadFn);
 cancelUpload?.addEventListener("click", closeUploadFn);
 bindOverlayClose(uploadModal, closeUploadFn);
 
+/* ---------- UPDATED SUBMIT HANDLER ---------- */
 submitUpload?.addEventListener("click", () => {
   if (!authUser) return alert("Please log in first.");
 
   const nm = (upName.value || "").trim();
   const ds = (upDesc.value || "").trim();
-  const yt = (upYt.value || "").trim();
+  const rawYt = (upYt.value || "").trim(); // Get the raw input
 
-  if (!nm || !ds || !yt) return alert("Please add: name, description, and YouTube ID.");
+  // FIX: Extract the ID from the URL before saving
+  const extractedId = extractYouTubeId(rawYt);
+
+  if (!nm || !ds || !extractedId) {
+    return alert("Please provide a valid YouTube link or ID.");
+  }
 
   const id = `u_${Math.random().toString(16).slice(2)}`;
   const newStartup = {
@@ -399,11 +449,27 @@ submitUpload?.addEventListener("click", () => {
     desc: ds,
     about: ds,
     confidence: 50,
-    yt,
+    yt: extractedId, // Save the clean ID here
     website: (upSite.value || "").trim() || "#",
     social: (upSocial.value || "").trim() || "#"
   };
 
+  startups.unshift(newStartup);
+  prevConfidence.set(id, newStartup.confidence);
+
+  // Clear inputs
+  upName.value = "";
+  upDesc.value = "";
+  upYt.value = "";
+  upSite.value = "";
+  upSocial.value = "";
+
+  closeUploadFn();
+
+  index = 0;
+  routeTo("home");
+  render();
+});
   startups.unshift(newStartup);
   prevConfidence.set(id, newStartup.confidence);
 
@@ -850,3 +916,4 @@ function renderProfile(){
 setLoggedOutUI();
 renderTrending();
 render();
+
